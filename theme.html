@@ -1,0 +1,227 @@
+<!-- 
+    TUMBLR BOILER PLATE WITH NPF SUPPORT
+    Created by UndeadOrion
+    https://undeadorionart.tumblr.com/
+    undeadorionart@gmail.com
+    https://github.com/ColinMooreCodes/TumblrBoilerplate
+
+    Free to use and alter for free themes. Contact me if you wish to use this as a base of a paid theme and we can work something out. 
+
+    This is meant to be a bare bones basic theme that brings together both old and new post formats. 
+    Currently the JavaScript is very simple. It identifies post types and applies it first to a visible label for readability, then applies a class to the post itself. There are a scant few divs that need to be maintained for the code to work. The specifics have been marked in comments below. 
+
+ -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {block:Description}
+    <meta name="description" content="{MetaDescription}">
+    {/block:Description}
+    {MobileAppHeaders}
+    <title>
+        {Title}
+        {block:PostTitle}
+        {PostTitle}
+        {/block:PostTitle}
+        {block:SearchPage}
+        {lang:Search results for SearchQuery}
+        {/block:SearchPage}
+        {block:PermalinkPage}{block:PostSummary}
+        {PostSummary}{/block:PostSummary}
+        {/block:PermalinkPage}
+    </title>
+    <link rel="icon" type="image/x-icon" href="{Favicon}">
+    <link rel="apple-touch-icon-precomposed" href="{PortraitURL-128}">
+    <link rel="alternate" type="application/rss+xml" href="{RSS}">
+    <style type="text/css">
+        /*css*/
+
+        /*{CustomCSS}*/
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="/">{lang:Home}</a>
+        {block:AskEnabled}
+        <a href="/ask">{AskLabel}</a>
+        {/block:AskEnabled}
+        {block:SubmissionsEnabled}
+        <a href="/submit">{SubmitLabel}</a>
+        {/block:SubmissionsEnabled}
+        <a href="{RSS}">{lang:RSS}</a>
+        <a href="/archive">{lang:Archive}</a>
+        {block:HasPages}
+        {block:Pages}
+        <a href="{URL}">{Label}</a>
+        {/block:Pages}
+        {/block:HasPages}
+    </nav>
+
+    <header>
+        <a href="/" alt="Home">
+            {block:ShowAvatar}
+            <img src="{PortraitURL-128}" alt="Home">
+            {/block:ShowAvatar}
+            <h1>{Title}</h1>
+        </a>
+        {block:ShowDescription}
+        {Description}
+        {/block:ShowDescription}
+        <br>
+        <div class="center">&copy; {CopyrightYears}</div>
+    </header>
+
+
+    <main>
+        {block:SearchPage}
+        {lang:Found SearchResultCount results for SearchQuery}
+        {/block:SearchPage}
+
+        <!-- Required script sections 
+            if you want to use JavaScript with the NPF. The initialization line (posts = []) must be above the posts block, and the line with {NPF} must be inside the posts block. Placement beyond that is maleable. -->
+
+        <script>let posts = [];</script>
+        {block:Posts}
+        <script>posts['{PostId}'] = {NPF};</script>
+
+        <!-- End required script section -->
+
+        <!-- This line is not required but is used in the JavaScript to help identify post types easily.  -->
+        <div id="type-{PostId}">{PostType}{block:Reblogs} -- Reblog{/block:Reblogs}</div>
+
+        <!-- The ID as-is (postID-{PostID}) is required to use the JavaScript functions, it helps the script identify which post to alter -->
+        <article class="{PostType}Post" id="postID-{PostID}">
+            {block:PinnedPostLabel} {PinnedPostLabel} {/block:PinnedPostLabel}
+
+            {lang:Posted TimeAgo}
+            {block:Date}{MonthNumber}/{DayOfMonth}/{Year}{/block:Date}
+
+            {block:Title}
+            <h2>{Title} </h2>
+            {/block:Title}
+
+
+            {block:RebloggedFrom}{lang:Reblogged from ReblogParentName 2}{/block:RebloggedFrom}
+
+            {block:Submission}
+            Submitted by <a href="{SubmitterURL}" alt="{Submitter}">{Submitter}</a>
+            {SubmitterPortraitURL-96}
+
+            {/block:Submission}
+
+            {block:Photo}
+            {block:LinkURL}{LinkOpenTag} {LinkURL} {LinkCloseTag}
+            {/block:LinkURL}
+            <img src="{PhotoURL-HighRes}" alt="{PhotoAlt}">
+            {/block:Photo}
+
+            {block:Photoset}
+            {Photoset}
+            {/block:Photoset}
+
+            {block:Quote}
+            <h3>{Quote}</h3>
+            {block:Source} {source} {/block:Source}
+            {/block:Quote}
+
+            {block:Link}
+
+            <a href="{URL}">
+                {block:Thumbnail} <div class="linkThumbnail">
+                    <img src="{Thumbnail}" alt="{Name}">
+                    {/block:Thumbnail}
+                    <h3>{Name}</h3>
+                    {block:Description}{Description} {/block:Description}
+            </a>
+
+
+            {/block:Link}
+
+            {block:Chat}
+
+            {block:Lines}
+            {block:Label}{label} {/block:Label} {Line}<br>
+            {/block:Lines}
+
+            {/block:Chat}
+
+            {block:Audio}
+
+            {block:AudioPlayer} {AudioPlayer}{/block:AudioPlayer}
+
+            {/block:Audio}
+
+            {block:Video}
+            {Video-500}
+            {/block:Video}
+
+            {block:Answer}
+
+            <img src="{AskerPortraitURL-96}">
+            {Asker}
+
+            {Question}
+            {block:Reblogs}
+            <img src="{ReblogRootPortraitURL-96}" alt="{Username}">
+            {Username} TEST
+            {/block:Reblogs}
+            {Answer}
+            {/block:Answer}
+            {block:NotReblog}
+
+            <!-- the class of "postBody" is required for the JavaScript functions and should only be used on {Body} block in text or reblog posts -->
+            {block:Text} <div class="postBody">{Body}</div>{/block:Text}
+            {block:Caption}
+            {Caption}
+            {/block:Caption}
+            {/block:NotReblog}
+
+            {block:Reblogs}
+
+            <a href="{Permalink}">{Username}</a>
+
+            <!-- the class of "postBody" is required for the JavaScript functions and should only be used on {Body} block in text or reblog posts -->
+            <div class="postBody">{Body}</div>
+            {/block:Reblogs}
+
+            {block:HasTags}
+            Tags: {block:Tags}<a href="/tagged/{URLSafeTag}">{Tag}</a> {/block:Tags}
+            {/block:HasTags}
+
+
+
+            {block:ContentSource} {SourceURL}{/block:ContentSource}
+
+            <a href="{RelativePermalink}">{NoteCountWithLabel}</a>
+
+            {block:PostNotes}{NoteCountWithLabel} {/block:PostNotes}
+        </article> <!-- end post -->
+        {block:NoteCount}{PostNotes-64} {/block:NoteCount}
+        {/block:Posts}
+        {block:Pagination}
+        {block:PreviousPage}
+        <a href="{PreviousPage}">{lang:Previous}</a>
+        {/block:PreviousPage}
+        {lang:CurrentPage of TotalPages}
+        {block:NextPage}
+        <a href="{NextPage}">{lang:Next}</a>
+        {/block:NextPage}
+
+        {/block:Pagination}
+    </main>
+
+
+    <script>
+        /*js*/
+    </script>
+</body>
+
+</html>
